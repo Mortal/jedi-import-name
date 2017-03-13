@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import argparse
 from names import get_import_statements
@@ -46,11 +47,15 @@ def get_imports_for_name(name, filenames, start, skip_relative):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--absolute', '-a', action='store_true')
-    parser.add_argument('--start', default='.')
-    parser.add_argument('--parents', action='store_true')
-    parser.add_argument('-n', type=int)
-    parser.add_argument('name')
+    parser.add_argument('--absolute', '-a', action='store_true',
+                        help='do not output relative imports')
+    parser.add_argument('--start', default='.',
+                        help='directory or file to start search')
+    parser.add_argument('--parents', action='store_true',
+                        help='search parent directories for code')
+    parser.add_argument('-n', type=int,
+                        help='stop searching after this number of results')
+    parser.add_argument('name', help='name to import')
     args = parser.parse_args()
     if os.path.isdir(args.start):
         start = args.start
