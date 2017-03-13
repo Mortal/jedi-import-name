@@ -136,7 +136,7 @@ def main():
     limit = args.n
     for i, line in enumerate(lines):
         if line not in seen:
-            print(line)
+            print(line, flush=True)
             seen.add(line)
             if limit and len(seen) >= limit:
                 break
