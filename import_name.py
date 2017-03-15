@@ -140,6 +140,8 @@ def main():
             seen.add(line)
             if limit and len(seen) >= limit:
                 break
+    if not seen:
+        raise SystemExit(1)
 
 
 if __name__ == '__main__':
