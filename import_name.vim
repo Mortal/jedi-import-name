@@ -1,6 +1,8 @@
 " vim: set sw=4 et:
 function ImportNameUnderCursorHandle(channel, msg)
-    exec 'py3 insert_import(' . json_encode(a:msg) . ')'
+    let msg = py3eval('insert_import(' . json_encode(a:msg) . ')')
+    redraw
+    echom msg
 endfunction
 
 function ImportNameUnderCursorStderr(channel, msg)
@@ -84,6 +86,6 @@ def insert_import(line):
     while lineno > 0 and vim.current.buffer[lineno-1] == '':
         lineno -= 1
     vim.current.buffer[lineno:lineno] = [line]
-    print("Inserted %r at line %s" % (line, lineno))
+    return "Inserted %r at line %s" % (line, lineno)
 EOF
 au FileType python nnoremap <buffer> <Leader>i :<C-u>call ImportNameUnderCursor()<CR>
