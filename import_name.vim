@@ -9,17 +9,23 @@ function ImportNameUnderCursorStderr(channel, msg)
     echoe a:msg
 endfunction
 
-function ImportNameUnderCursorExit(job, status)
-    if a:status != 0
+function ImportNameUnderCursorExit(word, status)
+    if a:status == 1
+        redraw
+        echom 'Could not find an import of ' . json_encode(a:word)
+    elseif a:status != 0
+        redraw
         echoe 'import_name failed'
-    else
-        "echom 'import_name exited'
     endif
 endfunction
 
 function ImportNameUnderCursor()
-    let args = ['import_name', '-n1', '--start', expand('%:p'), '--parents', '--absolute', expand('<cword>')]
-    let opts = {'in_io': 'null', 'out_cb': 'ImportNameUnderCursorHandle', 'err_cb': 'ImportNameUnderCursorStderr', 'exit_cb': 'ImportNameUnderCursorExit'}
+    let word = expand('<cword>')
+    let args = ['import_name', '-n1', '--start', expand('%:p'), '--parents', '--absolute', word]
+    let opts = {'in_io': 'null',
+                \'out_cb': 'ImportNameUnderCursorHandle',
+                \'err_cb': 'ImportNameUnderCursorStderr',
+                \'exit_cb': {j, status -> ImportNameUnderCursorExit(word, status)}}
     let job = job_start(args, opts)
     let channel = job_getchannel(job)
     if ch_status(channel) != "open"
