@@ -134,7 +134,7 @@ def main():
     lines = get_imports_for_name(args.name, filenames, start, args.absolute)
     seen = set()
     limit = args.n
-    for i, line in enumerate(lines):
+    for line in lines:
         if line not in seen:
             print(line, flush=True)
             seen.add(line)
