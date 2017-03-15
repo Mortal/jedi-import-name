@@ -88,4 +88,4 @@ def insert_import(line):
     vim.current.buffer[lineno:lineno] = [line]
     return "Inserted %r at line %s" % (line, lineno)
 EOF
-au FileType python nnoremap <buffer> <Leader>i :<C-u>call ImportNameUnderCursor()<CR>
+au FileType python nnoremap <silent> <buffer> <Leader>i :<C-u>call ImportNameUnderCursor()<CR>
