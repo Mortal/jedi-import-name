@@ -3,11 +3,6 @@ import os
 import argparse
 
 
-def dotted_name_str(n):
-    children = n if isinstance(n, list) else getattr(n, 'children', (n,))
-    return ''.join(str(c) for c in children)
-
-
 IMPORT_TYPES = ('dotted_as_name', 'dotted_as_names', 'import_as_name',
                 'import_as_names', 'import_from', 'import_name')
 
