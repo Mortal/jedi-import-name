@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import argparse
+import importlib
 
 
 IMPORT_TYPES = ('dotted_as_name', 'dotted_as_names', 'import_as_name',
@@ -99,7 +100,29 @@ def find_python_files_from(path: os.PathLike, skip=None):
         yield from find_python_files_under(os.path.join(path, '..'), path)
 
 
-def get_imports_for_name(name, filenames, start, skip_relative):
+def direct_import(atom):
+    names = atom.split('.')
+    for i in range(1, len(names)):
+        prefix = '.'.join(names[:i])
+        postfix = '.'.join(names[i:])
+        try:
+            module = importlib.import_module(prefix)
+        except ImportError:
+            break
+        o = module
+        for n in names[i:]:
+            try:
+                o = getattr(o, n)
+            except AttributeError:
+                o = None
+                break
+        if o is not None:
+            yield 'import %s' % prefix
+
+
+def get_imports_for_name(atom, filenames, start, skip_relative):
+    yield from direct_import(atom)
+    name = atom.split('.')[0]
     for filename in filenames:
         for line in get_import_statements(filename.path, skip_relative):
             if line.endswith(' ' + name):
